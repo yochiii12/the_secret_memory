@@ -9,10 +9,12 @@ public class DialogoManager : MonoBehaviour
     public GameObject panelDialogo;
     public TextMeshProUGUI textoDialogo;
 
-    public float velocidadTexto = 0.03f; // Velocidad de animación
+    public float velocidadTexto = 0.03f;
 
     private bool dialogoActivo = false;
     private bool textoTerminado = false;
+
+    private string mensajeCompleto;
 
     void Awake()
     {
@@ -22,22 +24,33 @@ public class DialogoManager : MonoBehaviour
 
     public void MostrarDialogo(string mensaje)
     {
-        StopAllCoroutines(); // Por si se llama dos veces
+        StopAllCoroutines();
+
         panelDialogo.SetActive(true);
         dialogoActivo = true;
         textoTerminado = false;
 
-        StartCoroutine(AnimarTexto(mensaje));
+        mensajeCompleto = mensaje;
+
+        StartCoroutine(AnimarTexto());
     }
 
-    IEnumerator AnimarTexto(string mensaje)
+    IEnumerator AnimarTexto()
     {
         textoDialogo.text = "";
 
-        foreach (char letra in mensaje)
+        foreach (char letra in mensajeCompleto)
         {
             textoDialogo.text += letra;
             yield return new WaitForSeconds(velocidadTexto);
+
+            // Si el jugador presiona E mientras se escribe → completar texto
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                textoDialogo.text = mensajeCompleto;
+                textoTerminado = true;
+                yield break;
+            }
         }
 
         textoTerminado = true;
@@ -45,20 +58,24 @@ public class DialogoManager : MonoBehaviour
 
     void Update()
     {
-        if (dialogoActivo && Input.GetKeyDown(KeyCode.E))
+        if (!dialogoActivo) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (textoTerminado)
+            if (!textoTerminado)
             {
-                // Cerrar diálogo
-                panelDialogo.SetActive(false);
-                dialogoActivo = false;
+                StopAllCoroutines();
+                textoDialogo.text = mensajeCompleto;
+                textoTerminado = true;
             }
             else
             {
-                // Mostrar texto completo instantáneamente
-                StopAllCoroutines();
-                textoDialogo.text = textoDialogo.text = textoDialogo.text = textoDialogo.text; // redundante pero seguro
-                textoTerminado = true;
+                panelDialogo.SetActive(false);
+                dialogoActivo = false;
+
+                // ← DESBLOQUEAR INTERACCIÓN DEL JUGADOR
+                InteraccionJugador jugador = FindObjectOfType<InteraccionJugador>();
+                jugador.DesbloquearInteraccion();
             }
         }
     }
