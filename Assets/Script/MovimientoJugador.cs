@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class MovimientoJugador : MonoBehaviour
+public class MovimientoJugador : MonoBehaviour // Usar inglés
 {
 
-    public float speed = 5f;
+    public float speed = 5f; // Usar PascalCase
 
-    private Rigidbody2D rb;
-    private Vector2 movement;
+    private Rigidbody2D rb; // Usar _camelCase; Sin abreviaciones
+    private Vector2 movement; // Usar _camelCase
 
     void Start()
     {
@@ -15,7 +15,7 @@ public class MovimientoJugador : MonoBehaviour
 
     void Update()
     {
-        // Leer entrada del jugador
+        // Leer entrada del jugador 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -25,7 +25,7 @@ public class MovimientoJugador : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Aplicar movimiento
+        // Aplicar movimiento 
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
 }

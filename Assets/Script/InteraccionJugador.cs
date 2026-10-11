@@ -1,19 +1,21 @@
+// Sugerencia general de Clean Code: usar if de una sola línea con llaves cuando sea legible.
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class InteraccionJugador : MonoBehaviour
+public class InteraccionJugador : MonoBehaviour // Usar inglés
 {
-    public float rangoInteraccion = 1f;
-    public LayerMask capaInteractuable;
+    public float rangoInteraccion = 1f; // Usar PascalCase; Usar inglés
+    public LayerMask capaInteractuable; // Usar PascalCase; Usar inglés
 
-    private bool puedeUsarX = true;
-    private float cooldownX = 30f;
+    private bool puedeUsarX = true; // Usar _camelCase; Usar inglés
+    private float cooldownX = 30f; // Usar _camelCase
 
-    private bool puedeInteractuar = true;
+    private bool puedeInteractuar = true; // Usar _camelCase; Usar inglés
 
     // ← NUEVO: Objetos que aparecerán cuando presionas X
-    public List<GameObject> objetosOcultos;
+    public List<GameObject> objetosOcultos; // Usar PascalCase; Respetar el orden de acceso y static; Usar inglés
 
     void Update()
     {
@@ -29,15 +31,15 @@ public class InteraccionJugador : MonoBehaviour
         }
     }
 
-    void RevisarInteraccion()
+    void RevisarInteraccion() // Usar inglés
     {
-        if (!puedeInteractuar) return;
+        if (!puedeInteractuar) return; // Agregar llaves al if
 
-        Collider2D col = Physics2D.OverlapCircle(transform.position, rangoInteraccion, capaInteractuable);
+        Collider2D col = Physics2D.OverlapCircle(transform.position, rangoInteraccion, capaInteractuable); // Sin abreviaciones
 
-        if (col != null)
+        if (col != null) // Revisar si se puede usar retorno temprano
         {
-            Interactuable interactuable = col.GetComponent<Interactuable>();
+            Interactuable interactuable = col.GetComponent<Interactuable>(); // Usar inglés
             if (interactuable != null)
             {
                 puedeInteractuar = false;
@@ -46,36 +48,36 @@ public class InteraccionJugador : MonoBehaviour
         }
     }
 
-    public void DesbloquearInteraccion()
+    public void DesbloquearInteraccion() // Respetar el orden de acceso y static; Usar inglés
     {
         puedeInteractuar = true;
     }
 
-    IEnumerator ResaltarInteractuables()
+    IEnumerator ResaltarInteractuables() // Usar inglés
     {
         // 1. Resaltar interactuables
-        Interactuable[] objetos = Object.FindObjectsByType<Interactuable>(FindObjectsSortMode.None);
+        Interactuable[] objetos = Object.FindObjectsByType<Interactuable>(FindObjectsSortMode.None); // Usar inglés
 
         foreach (Interactuable obj in objetos)
             obj.CambiarColor(Color.yellow);
 
-        // 2. Activar objetos ocultos
+        // 2. Activar objetos ocultos 
         foreach (GameObject obj in objetosOcultos)
             obj.SetActive(true);
 
-        // Esperar 3 segundos
-        yield return new WaitForSeconds(3f);
+        // Esperar 3 segundos 
+        yield return new WaitForSeconds(3f); // Revisar: usar una constante o configuración con nombre
 
-        // 3. Restaurar color
+        // 3. Restaurar color 
         foreach (Interactuable obj in objetos)
             obj.RestaurarColor();
 
-        // 4. Ocultar objetos otra vez
+        // 4. Ocultar objetos otra vez 
         foreach (GameObject obj in objetosOcultos)
             obj.SetActive(false);
     }
 
-    IEnumerator CooldownX()
+    IEnumerator CooldownX() // Usar un verbo en el nombre del método
     {
         puedeUsarX = false;
         yield return new WaitForSeconds(cooldownX);
