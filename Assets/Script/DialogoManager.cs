@@ -5,16 +5,16 @@ using System.Collections;
 public class DialogueManager : MonoBehaviour 
 {
     public static DialogueManager Instance;
-
-    public GameObject DialoguePanel; // Usar PascalCase; Usar inglés
-    public TextMeshProUGUI DialogueText; // Usar PascalCase; Usar inglés
-
+    [Header("UI Text")]
+    public GameObject DialoguePanel; 
+    public TextMeshProUGUI DialogueText;
+    [Header("Text Settings")]
     public float TextSpeed = 0.03f; // Usar PascalCase; Usar inglés
-
-    private bool ActiveDialogue = false; // Usar _camelCase; Revisar: usar un verbo de estado (is, has o can); Usar inglés
-    private bool FinishedText = false; // Usar _camelCase; Revisar: usar un verbo de estado (is, has o can); Usar inglés
-
-    private string CompleteMessage; // Usar _camelCase; Usar inglés
+    [Header("External Dependencies")]
+    [SerializeField] private PlayerInteraction _playerInteraction;
+    private bool _isDialogueActive = false;
+    private bool _hasTextFinished = false;
+    private string _fullMessage;
 
     void Awake()
     {
@@ -22,7 +22,27 @@ public class DialogueManager : MonoBehaviour
         DialoguePanel.SetActive(false);
     }
 
-    public void ShowDialogue(string mensaje)
+    void Update()
+    {
+        if (!_isDialogueActive)
+        {
+            return;
+        }
+
+        if (!Input.GetKeyDown(KeyCode.E))
+        {
+            return;
+        }
+
+        if (!_hasTextFinished)
+        {
+            StopAllCoroutines();
+            DialogueText.text = _fullMessage;
+            _hasTextFinished = true;
+            return;
+        }
+    }
+    public void ShowDialogue(string message)
     {
         StopAllCoroutines();
 
@@ -30,7 +50,7 @@ public class DialogueManager : MonoBehaviour
         ActiveDialogue = true;
         FinishedText = false;
 
-        CompleteMessage = mensaje;
+        CompleteMessage = message;
 
         StartCoroutine(AnimateText());
     }
@@ -39,9 +59,9 @@ public class DialogueManager : MonoBehaviour
     {
         DialogueText.text = "";
 
-        foreach (char letra in CompleteMessage)
+        foreach (char letter in CompleteMessage)
         {
-            DialogueText.text += letra;
+            DialogueText.text += letter;
             yield return new WaitForSeconds(TextSpeed); // Aclarar el significado o las unidades con Tooltip
 
             // Si el jugador presiona E mientras se escribe → completar texto
