@@ -1,31 +1,32 @@
 using UnityEngine;
 
-public class Interactuable : MonoBehaviour // Usar inglés
+public class Interactable : MonoBehaviour
 {
     [TextArea]
-    public string dialogo; // Usar PascalCase; Usar inglés
+    public string Dialogue;
 
-    private SpriteRenderer sr; // Usar _camelCase; Sin abreviaciones
-    private Color colorOriginal; // Usar _camelCase
+    private SpriteRenderer _spriteRenderer;
+    private Color _originalColor;
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
-        colorOriginal = sr.color;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _originalColor = _spriteRenderer.color;
     }
 
-    public void Interactuar() // Usar inglés
+    public void Interact()
     {
-        DialogoManager.Instance.MostrarDialogo(dialogo);
+        DialogueManager.Instance.ShowDialogue(Dialogue);
     }
 
-    public void CambiarColor(Color nuevoColor) // Usar inglés
+    public void ChangeColor(Color newColor)
     {
-        sr.color = nuevoColor;
+        _spriteRenderer.color = newColor;
     }
 
-    public void RestaurarColor() // Usar inglés
+    public void RestoreColor()
     {
-        sr.color = colorOriginal;
+        _spriteRenderer.color = _originalColor;
     }
+}
 }
