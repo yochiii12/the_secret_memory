@@ -1,31 +1,32 @@
 using UnityEngine;
 
-public class Interactuable : MonoBehaviour
+public class Interactable : MonoBehaviour
 {
     [TextArea]
-    public string dialogo;
+    public string Dialogue;
 
-    private SpriteRenderer sr;
-    private Color colorOriginal;
+    private SpriteRenderer _spriteRenderer;
+    private Color _originalColor;
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
-        colorOriginal = sr.color;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _originalColor = _spriteRenderer.color;
     }
 
-    public void Interactuar()
+    public void Interact()
     {
-        DialogoManager.Instance.MostrarDialogo(dialogo);
+        DialogueManager.Instance.ShowDialogue(Dialogue);
     }
 
-    public void CambiarColor(Color nuevoColor)
+    public void ChangeColor(Color newColor)
     {
-        sr.color = nuevoColor;
+        _spriteRenderer.color = newColor;
     }
 
-    public void RestaurarColor()
+    public void RestoreColor()
     {
-        sr.color = colorOriginal;
+        _spriteRenderer.color = _originalColor;
     }
+}
 }

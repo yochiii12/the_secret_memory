@@ -2,79 +2,99 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class DialogoManager : MonoBehaviour
+public class DialogueManager : MonoBehaviour 
 {
-    public static DialogoManager Instance;
-
-    public GameObject panelDialogo;
-    public TextMeshProUGUI textoDialogo;
-
-    public float velocidadTexto = 0.03f;
-
-    private bool dialogoActivo = false;
-    private bool textoTerminado = false;
-
-    private string mensajeCompleto;
+    public static DialogueManager Instance;
+    [Header("UI Text")]
+    public GameObject DialoguePanel; 
+    public TextMeshProUGUI DialogueText;
+    [Header("Text Settings")]
+    public float TextSpeed = 0.03f; // Usar PascalCase; Usar inglés
+    [Header("External Dependencies")]
+    [SerializeField] private PlayerInteraction _playerInteraction;
+    private bool _isDialogueActive = false;
+    private bool _hasTextFinished = false;
+    private string _fullMessage;
 
     void Awake()
     {
         Instance = this;
-        panelDialogo.SetActive(false);
-    }
-
-    public void MostrarDialogo(string mensaje)
-    {
-        StopAllCoroutines();
-
-        panelDialogo.SetActive(true);
-        dialogoActivo = true;
-        textoTerminado = false;
-
-        mensajeCompleto = mensaje;
-
-        StartCoroutine(AnimarTexto());
-    }
-
-    IEnumerator AnimarTexto()
-    {
-        textoDialogo.text = "";
-
-        foreach (char letra in mensajeCompleto)
-        {
-            textoDialogo.text += letra;
-            yield return new WaitForSeconds(velocidadTexto);
-
-            // Si el jugador presiona E mientras se escribe → completar texto
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                textoDialogo.text = mensajeCompleto;
-                textoTerminado = true;
-                yield break;
-            }
-        }
-
-        textoTerminado = true;
+        DialoguePanel.SetActive(false);
     }
 
     void Update()
     {
-        if (!dialogoActivo) return;
-
-        if (Input.GetKeyDown(KeyCode.E))
+        if (!_isDialogueActive)
         {
-            if (!textoTerminado)
+            return;
+        }
+
+        if (!Input.GetKeyDown(KeyCode.E))
+        {
+            return;
+        }
+
+        if (!_hasTextFinished)
+        {
+            StopAllCoroutines();
+            DialogueText.text = _fullMessage;
+            _hasTextFinished = true;
+            return;
+        }
+    }
+    public void ShowDialogue(string message)
+    {
+        StopAllCoroutines();
+
+        DialoguePanel.SetActive(true);
+        ActiveDialogue = true;
+        FinishedText = false;
+
+        CompleteMessage = message;
+
+        StartCoroutine(AnimateText());
+    }
+
+    IEnumerator AnimateText() 
+    {
+        DialogueText.text = "";
+
+        foreach (char letter in CompleteMessage)
+        {
+            DialogueText.text += letter;
+            yield return new WaitForSeconds(TextSpeed); // Aclarar el significado o las unidades con Tooltip
+
+            // Si el jugador presiona E mientras se escribe → completar texto
+            if (Input.GetKeyDown(KeyCode.E)) // Revisar si se puede usar retorno temprano
+            {
+                DialogueText.text = CompleteMessage;
+                FinishedText = true;
+                yield break;
+            }
+        }
+
+        FinishedText = true;
+    }
+
+    void Update() // Respetar el orden de los miembros
+    {
+        if (!ActiveDialogue) return; // Agregar llaves al if
+
+        if (Input.GetKeyDown(KeyCode.E)) // Revisar si se puede usar retorno temprano
+        {
+            if (!FinishedText)
             {
                 StopAllCoroutines();
-                textoDialogo.text = mensajeCompleto;
-                textoTerminado = true;
+                DialogueText.text = CompleteMessage;
+                FinishedText = true;
             }
             else
             {
-                panelDialogo.SetActive(false);
-                dialogoActivo = false;
+                DialoguePanel.SetActive(false);
+                ActiveDialogue = false;
 
-                // ← DESBLOQUEAR INTERACCIÓN DEL JUGADOR
-                InteraccionJugador jugador = FindObjectOfType<InteraccionJugador>();
+                // ← DESBLOQUEAR INTERACCIÓN DEL JUGADOR // Explicar el porqué, no el cómo
+                InteraccionJugador jugador = FindObjectOfType<InteraccionJugador>(); // Revisar la inyección de dependencias; Usar inglés
                 jugador.DesbloquearInteraccion();
             }
         }
