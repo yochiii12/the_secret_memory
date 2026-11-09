@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour // Revisar: Interactable también está declarada en Interectable.cs
 {
     [TextArea]
     public string Dialogue;
@@ -29,4 +29,4 @@ public class Interactable : MonoBehaviour
         _spriteRenderer.color = _originalColor;
     }
 }
-}
+} // Revisar la llave de cierre sobrante

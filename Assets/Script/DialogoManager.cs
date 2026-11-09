@@ -1,8 +1,10 @@
+// Sugerencia general de Clean Code: usar if de una sola línea con llaves cuando sea legible.
+
 using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class DialogueManager : MonoBehaviour 
+public class DialogueManager : MonoBehaviour  // Revisar: la clase DialogueManager también está declarada en otros archivos
 {
     public static DialogueManager Instance;
     [Header("UI Text")]
@@ -11,7 +13,7 @@ public class DialogueManager : MonoBehaviour
     [Header("Text Settings")]
     public float TextSpeed = 0.03f; // Usar PascalCase; Usar inglés
     [Header("External Dependencies")]
-    [SerializeField] private PlayerInteraction _playerInteraction;
+    [SerializeField] private PlayerInteraction _playerInteraction; // Separar los grupos de acceso con una línea en blanco
     private bool _isDialogueActive = false;
     private bool _hasTextFinished = false;
     private string _fullMessage;
