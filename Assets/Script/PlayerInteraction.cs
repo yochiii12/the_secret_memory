@@ -1,5 +1,3 @@
-// Sugerencia general de Clean Code: usar if de una sola línea con llaves cuando sea legible.
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,7 +87,6 @@ public class PlayerInteraction : MonoBehaviour
             hiddenObject.SetActive(false);
         }
     }
-
     private IEnumerator StartCooldownX()
     {
         _canUseX = false;
