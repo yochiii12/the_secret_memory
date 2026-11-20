@@ -29,4 +29,3 @@ public class Interactable : MonoBehaviour
         _spriteRenderer.color = _originalColor;
     }
 }
-}

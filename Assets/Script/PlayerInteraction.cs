@@ -87,7 +87,6 @@ public class PlayerInteraction : MonoBehaviour
             hiddenObject.SetActive(false);
         }
     }
-
     private IEnumerator StartCooldownX()
     {
         _canUseX = false;

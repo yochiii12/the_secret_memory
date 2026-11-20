@@ -1,8 +1,10 @@
+// Sugerencia general de Clean Code: usar if de una sola línea con llaves cuando sea legible.
+
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : MonoBehaviour // Revisar: la clase DialogueManager también está declarada en otros archivos
 {
     public static DialogueManager Instance;
 

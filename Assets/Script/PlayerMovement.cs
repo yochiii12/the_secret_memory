@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour // Revisar: PlayerMovement también está declarada en MovimientoJugador.cs
 {
     public float Speed = 5f;
 
